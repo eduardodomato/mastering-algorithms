@@ -14,7 +14,7 @@ By the end of this curriculum, you will be able to:
 ## 📋 Progress Tracker
 
 ### Initial Assessment
-- [ ] **Assessment Questions Completed** - Complete the 3 questions in `ASSESSMENT.md`
+- [x] **Assessment Questions Completed** - Complete the 3 questions in `ASSESSMENT.md`
 
 ### Curriculum Progress
 
