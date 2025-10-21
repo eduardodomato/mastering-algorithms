@@ -23,6 +23,40 @@ Please answer the following 3 questions thoughtfully. There are no "wrong" answe
 **Your Answer**:
 ```java
 // Write your Student class here
+    
+    public class Student implements Comparable<Student>{
+
+        private final String name;
+        private final int age;
+
+        public Student(String name, int age){
+            this.name =  name;
+            this.age = age;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+        public int getAge(){
+            return age;
+        }
+
+        @Override
+        public int compareTo(Student other){
+            if (other == null) {
+                throw new NullPointerException("Cannot compare Student to null");
+            }
+            return Integer.compare(this.age, other.age);
+        }
+        
+        @Override
+        public String toString() {
+            return String.format("Student{name='%s', age=%d}", name, age);
+        }
+
+    }
+
 ```
 
 ---
@@ -50,13 +84,13 @@ Please answer the following 3 questions thoughtfully. There are no "wrong" answe
 **Your Answer**:
 ```
 Approach: 
-[Describe your strategy here]
+Can use a HashMap to storing the complement between the target and the current value as key, and the index as value. So that we only traverse the array as much up to "n". Asking if the current calculation matches some of the previous stored.
 
-Time Complexity: O(___)
-Space Complexity: O(___)
+Time Complexity: O(n)
+Space Complexity: O(n)
 
 Method Signature:
-[Write your method signature here]
+public int[] twoNumbers(int[] arr, int target);
 ```
 
 ---
@@ -81,19 +115,37 @@ Method Signature:
 
 **Your Answer**:
 ```
-Primary Data Structure: [Your choice]
+Primary Data Structure: HashMap
 
 Reasoning:
-[Explain why this data structure is best for this problem, considering:
-- Time complexity for each operation
-- Space complexity
-- Ease of implementation
-- Any trade-offs you considered]
+
+Because it can store key/value pairs, having the word as key, and the frecuency as value, for case insensitive cases, before storing or incrementing I can convert toLowerCase(). Then to pull the required information can take advantage of the entrySet() and using the Streams API or filtering matters. Time complexity O(n) I bet, because is O(n) to traverse the document, and O(m) the filtering if remember well.
 
 Alternative approaches considered:
-[If you considered other options, briefly explain why you didn't choose them]
+Something similar using TreeMap if by the case I need something related to natural ordering.
 ```
 
+```java
+Map<String, Integer> wordFreq = new HashMap<>();
+
+// Count frequencies
+for (String word : document) {
+    wordFreq.merge(word.toLowerCase(), 1, Integer::sum);
+}
+
+// Find most frequent word
+String mostFrequent = wordFreq.entrySet().stream()
+    .max(Map.Entry.comparingByValue())
+    .map(Map.Entry::getKey)
+    .orElse("");
+
+// Find words appearing exactly twice
+List<String> twiceWords = wordFreq.entrySet().stream()
+    .filter(entry -> entry.getValue() == 2)
+    .map(Map.Entry::getKey)
+    .collect(Collectors.toList());
+
+```
 ---
 
 ## Self-Evaluation Guide 📋
