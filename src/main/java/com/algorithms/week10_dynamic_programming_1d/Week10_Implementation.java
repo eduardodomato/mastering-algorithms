@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for 1D dynamic programming problems.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week10_Implementation {
     
     /**
      * Climbing Stairs using DP (Fibonacci sequence)

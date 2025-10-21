@@ -6,7 +6,7 @@ package com.algorithms.week04_linkedlists;
  * This class contains core implementations and utility methods for linked list operations.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week04_Implementation {
     
     /**
      * Definition for singly-linked list node

@@ -6,7 +6,7 @@ package com.algorithms.week01_arrays_strings;
  * This class contains core implementations and utility methods for array and string operations.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week01_Implementation {
     
     /**
      * Two Pointers Technique: Find two numbers that sum to target

@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for heap and priority queue operations.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week07_Implementation {
     
     /**
      * Find kth largest element using min heap

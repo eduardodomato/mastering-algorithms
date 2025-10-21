@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for tree operations.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week06_Implementation {
     
     /**
      * Definition for a binary tree node

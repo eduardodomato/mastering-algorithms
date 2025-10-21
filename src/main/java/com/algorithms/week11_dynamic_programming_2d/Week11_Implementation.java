@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for 2D dynamic programming problems.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week11_Implementation {
     
     /**
      * Unique Paths using 2D DP

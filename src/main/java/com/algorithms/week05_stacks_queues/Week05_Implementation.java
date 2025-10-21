@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for stack and queue operations.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week05_Implementation {
     
     /**
      * Check if parentheses string is valid using stack

@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for advanced sorting and searching algorithms.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week12_Implementation {
     
     /**
      * Search in Rotated Sorted Array using modified binary search

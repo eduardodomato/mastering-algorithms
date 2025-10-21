@@ -6,7 +6,7 @@ package com.algorithms.week02_math_bits;
  * This class contains core implementations and utility methods for mathematical operations and bit manipulation.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week02_Implementation {
     
     /**
      * Check if a number is power of two using bit manipulation

@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for hash-based data structures.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week03_Implementation {
     
     /**
      * Check if two strings are anagrams using HashMap

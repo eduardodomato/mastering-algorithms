@@ -8,7 +8,7 @@ import java.util.*;
  * This class contains core implementations and utility methods for recursive and backtracking algorithms.
  * Study these implementations to understand the fundamental patterns before solving the practice problems.
  */
-public class Implementation {
+public class Week09_Implementation {
     
     /**
      * Generate all combinations of well-formed parentheses using backtracking
