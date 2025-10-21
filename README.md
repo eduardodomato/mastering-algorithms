@@ -120,7 +120,7 @@ By the end of this curriculum, you will be able to:
 
 ### For Each Topic:
 1. **Read the Lesson**: Start with the `README.md` in each week's folder
-2. **Study the Implementation**: Review the `Implementation.java` file
+2. **Study the Implementation**: Review the `WeekXX_Implementation.java` file
 3. **Solve Practice Problems**: Work through the `ProblemXX.java` files
 4. **Test Your Solutions**: Run the corresponding JUnit tests
 5. **Self-Review**: Use the provided checklist to evaluate your code
