@@ -2,6 +2,20 @@
 
 Welcome to your comprehensive Java algorithms learning journey! This curriculum is designed to prepare you for technical interviews and competitive programming on platforms like LeetCode and HackerRank.
 
+📢 This project was created using Cursor AI IDE and is designed to evolve dynamically as you progress through your learning journey. Here's how it works:
+
+### For Cursor Users (Recommended Path)
+- **Start from the `main` branch** - This contains the foundational structure ready for Week 1
+- **Ask the Cursor Agent** to generate subsequent weeks as you complete each one
+- **Learn step-by-step** - This approach encourages weekly progression and prevents overwhelming yourself with too much content at once
+
+### For Non-Cursor Users
+- **Use the `full-course` branch** - This contains all exercises from Week 1-12
+- **Complete freedom** to work through the entire curriculum at your own pace
+- **All content available** without needing AI assistance
+
+**Happy coding and learning! Eduardo.**
+
 ## 🎯 Learning Objectives
 
 By the end of this curriculum, you will be able to:
