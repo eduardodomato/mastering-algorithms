@@ -1,5 +1,8 @@
 package com.algorithms.week01_arrays_strings;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Problem 1: Two Sum
  * 
@@ -42,11 +45,19 @@ public class Problem01_TwoSum {
      * @return array containing indices of the two numbers
      */
     public int[] twoSum(int[] nums, int target) {
-        // TODO: Implement your solution here
         // Hint: Consider using a HashMap to store number -> index mapping
         // Time complexity: O(n)
         // Space complexity: O(n)
-        
-        throw new UnsupportedOperationException("Method not implemented yet");
+       
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[] {};
+
     }
 }

@@ -73,7 +73,7 @@ class Problem03_LongestSubstringWithoutRepeatingTest {
     @Test
     void testLengthOfLongestSubstring_WithSpaces() {
         String s = "a b c d e";
-        int expected = 9; // All characters including spaces are unique
+        int expected = 3; // All characters including spaces are unique
         int result = solution.lengthOfLongestSubstring(s);
         
         assertEquals(expected, result);
