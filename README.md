@@ -2,6 +2,13 @@
 
 Welcome to your comprehensive Java algorithms learning journey! This curriculum is designed to prepare you for technical interviews and competitive programming on platforms like LeetCode and HackerRank.
 
+## 📝 Recent Updates
+
+**October 2025:**
+- ✅ Completed Week 1: Arrays & Strings (3/3 problems solved)
+- ✅ Completed Week 2: Basic Math & Bit Manipulation (3/3 problems solved)
+- 🎯 Mastered bitwise operations, XOR properties, and Sieve of Eratosthenes algorithm
+
 ## 🎯 Learning Objectives
 
 By the end of this curriculum, you will be able to:
@@ -20,8 +27,8 @@ By the end of this curriculum, you will be able to:
 
 | Week | Topic | Concept Status | Problems Completed | Date Completed |
 |------|-------|----------------|-------------------|----------------|
-| 1 | Arrays & Strings | ⏳ Not Started | 0/3 | - |
-| 2 | Basic Math & Bit Manipulation | ⏳ Not Started | 0/3 | - |
+| 1 | Arrays & Strings | ✅ Completed | 3/3 | Oct 2025 |
+| 2 | Basic Math & Bit Manipulation | ✅ Completed | 3/3 | Oct 2025 |
 | 3 | Hash Maps & Sets | ⏳ Not Started | 0/3 | - |
 | 4 | Linked Lists | ⏳ Not Started | 0/3 | - |
 | 5 | Stacks & Queues | ⏳ Not Started | 0/3 | - |
@@ -37,17 +44,27 @@ By the end of this curriculum, you will be able to:
 
 ## 🗺️ Curriculum Overview
 
-### **Week 1: Arrays & Strings**
+### **Week 1: Arrays & Strings** ✅
 - Array manipulation techniques
 - Two pointers technique
 - String processing algorithms
 - Sliding window pattern
 
-### **Week 2: Basic Math & Bit Manipulation**
+**Problems Solved:**
+1. ✅ Two Sum (LeetCode #1) - HashMap approach
+2. ✅ Maximum Subarray (LeetCode #53) - Kadane's algorithm
+3. ✅ Longest Substring Without Repeating Characters (LeetCode #3) - Sliding window
+
+### **Week 2: Basic Math & Bit Manipulation** ✅
 - Mathematical algorithms
 - Bitwise operations
 - Number theory basics
 - Prime number algorithms
+
+**Problems Solved:**
+1. ✅ Power of Two (LeetCode #231) - Bit manipulation with n & (n-1)
+2. ✅ Single Number (LeetCode #136) - XOR properties
+3. ✅ Count Primes (LeetCode #204) - Sieve of Eratosthenes
 
 ### **Week 3: Hash Maps & Sets**
 - Hash table fundamentals

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sieve of Eratosthenes - Interactive Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-reset {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #f56565;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .info-box {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            min-height: 80px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+
+        .number-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.4s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .number-cell.unchecked {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .number-cell.current {
+            background: #fbbf24;
+            color: white;
+            transform: scale(1.1);
+            border: 2px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.5);
+            animation: pulse 1s infinite;
+        }
+
+        .number-cell.prime {
+            background: #48bb78;
+            color: white;
+            border: 2px solid #38a169;
+        }
+
+        .number-cell.composite {
+            background: #fc8181;
+            color: white;
+            text-decoration: line-through;
+            border: 2px solid #f56565;
+        }
+
+        .number-cell.marking {
+            animation: strike 0.5s ease-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1.1);
+            }
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        @keyframes strike {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2) rotate(5deg);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .speed-control label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .speed-control input {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 Sieve of Eratosthenes</h1>
+        <p class="subtitle">Interactive Algorithm Visualization</p>
+
+        <div class="controls">
+            <button class="btn-primary" id="nextBtn">Next Step ➡️</button>
+            <button class="btn-secondary" id="autoBtn">Auto Play ▶️</button>
+            <button class="btn-reset" id="resetBtn">Reset 🔄</button>
+            <input type="number" id="maxNum" min="10" max="200" value="50" 
+                   style="padding: 10px; border-radius: 8px; border: 2px solid #e2e8f0; width: 100px;">
+        </div>
+
+        <div class="speed-control">
+            <label>Animation Speed:</label>
+            <input type="range" id="speedSlider" min="100" max="2000" value="800" step="100">
+            <span id="speedLabel">800ms</span>
+        </div>
+
+        <div class="info-box" id="infoBox">
+            <h3>Ready to Start!</h3>
+            <p>We'll find all prime numbers less than <span id="maxDisplay">50</span>. Click "Next Step" to begin, or "Auto Play" to watch the algorithm run automatically.</p>
+        </div>
+
+        <div class="grid-container" id="grid"></div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-box" style="background: #e2e8f0; border-color: #e2e8f0;"></div>
+                <span>Unchecked</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #fbbf24; border-color: #f59e0b;"></div>
+                <span>Current</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #48bb78; border-color: #38a169;"></div>
+                <span>Prime</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-box" style="background: #fc8181; border-color: #f56565;"></div>
+                <span>Composite (Crossed Out)</span>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="primeCount">0</div>
+                <div class="stat-label">Primes Found</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="currentPrime">-</div>
+                <div class="stat-label">Current Prime</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="stepsCount">0</div>
+                <div class="stat-label">Steps Taken</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let n = 50;
+        let isPrime = [];
+        let currentIndex = 2;
+        let currentMultiple = 0;
+        let primes = [];
+        let steps = 0;
+        let isAutoPlaying = false;
+        let autoPlayInterval = null;
+        let speed = 800;
+
+        const grid = document.getElementById('grid');
+        const infoBox = document.getElementById('infoBox');
+        const nextBtn = document.getElementById('nextBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const maxNumInput = document.getElementById('maxNum');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedLabel = document.getElementById('speedLabel');
+
+        function initialize() {
+            n = parseInt(maxNumInput.value);
+            document.getElementById('maxDisplay').textContent = n;
+            isPrime = new Array(n).fill(true);
+            isPrime[0] = isPrime[1] = false;
+            currentIndex = 2;
+            currentMultiple = 0;
+            primes = [];
+            steps = 0;
+            
+            renderGrid();
+            updateStats();
+            updateInfo('Ready to Start!', 
+                `We'll find all prime numbers less than ${n}. Click "Next Step" to begin, or "Auto Play" to watch the algorithm run automatically.`);
+        }
+
+        function renderGrid() {
+            grid.innerHTML = '';
+            for (let i = 0; i < n; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'number-cell';
+                cell.textContent = i;
+                cell.id = `cell-${i}`;
+                
+                if (i < 2) {
+                    cell.classList.add('composite');
+                } else {
+                    cell.classList.add('unchecked');
+                }
+                
+                grid.appendChild(cell);
+            }
+        }
+
+        function updateCell(num, className, animate = false) {
+            const cell = document.getElementById(`cell-${num}`);
+            if (cell) {
+                cell.className = 'number-cell ' + className;
+                if (animate) {
+                    cell.classList.add('marking');
+                    setTimeout(() => cell.classList.remove('marking'), 500);
+                }
+            }
+        }
+
+        function updateInfo(title, message) {
+            infoBox.innerHTML = `<h3>${title}</h3><p>${message}</p>`;
+        }
+
+        function updateStats() {
+            document.getElementById('primeCount').textContent = primes.length;
+            document.getElementById('currentPrime').textContent = 
+                currentIndex < n && currentMultiple === 0 ? currentIndex : '-';
+            document.getElementById('stepsCount').textContent = steps;
+        }
+
+        function nextStep() {
+            if (currentIndex >= n || currentIndex * currentIndex >= n) {
+                // Mark all remaining unchecked numbers as prime
+                for (let i = currentIndex; i < n; i++) {
+                    if (isPrime[i] && !primes.includes(i)) {
+                        primes.push(i);
+                        updateCell(i, 'prime');
+                    }
+                }
+                updateStats();
+                updateInfo('✅ Algorithm Complete!', 
+                    `Found ${primes.length} prime numbers less than ${n}. The primes are: ${primes.join(', ')}`);
+                stopAutoPlay();
+                nextBtn.disabled = true;
+                return false;
+            }
+
+            steps++;
+
+            if (currentMultiple === 0) {
+                // Starting a new prime
+                if (isPrime[currentIndex]) {
+                    primes.push(currentIndex);
+                    updateCell(currentIndex, 'current');
+                    updateInfo(`Step ${steps}: Found Prime ${currentIndex}`, 
+                        `${currentIndex} is prime! Now we'll cross out all its multiples starting from ${currentIndex}².`);
+                    currentMultiple = currentIndex * currentIndex;
+                } else {
+                    // This number was already marked as composite, skip it
+                    currentIndex++;
+                    return nextStep();
+                }
+            } else {
+                // Marking multiples
+                if (currentMultiple < n) {
+                    isPrime[currentMultiple] = false;
+                    updateCell(currentMultiple, 'composite', true);
+                    updateInfo(`Step ${steps}: Crossing Out ${currentMultiple}`, 
+                        `${currentMultiple} = ${currentIndex} × ${currentMultiple/currentIndex}, so it's not prime. Continuing to mark multiples...`);
+                    currentMultiple += currentIndex;
+                } else {
+                    // Done with this prime's multiples
+                    updateCell(currentIndex, 'prime');
+                    currentIndex++;
+                    currentMultiple = 0;
+                    
+                    // Skip to next prime candidate
+                    while (currentIndex < n && !isPrime[currentIndex]) {
+                        currentIndex++;
+                    }
+                }
+            }
+
+            updateStats();
+            return true;
+        }
+
+        function startAutoPlay() {
+            if (isAutoPlaying) return;
+            isAutoPlaying = true;
+            autoBtn.textContent = 'Pause ⏸️';
+            nextBtn.disabled = true;
+            
+            autoPlayInterval = setInterval(() => {
+                if (!nextStep()) {
+                    stopAutoPlay();
+                }
+            }, speed);
+        }
+
+        function stopAutoPlay() {
+            isAutoPlaying = false;
+            autoBtn.textContent = 'Auto Play ▶️';
+            nextBtn.disabled = false;
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+            }
+        }
+
+        nextBtn.addEventListener('click', () => nextStep());
+        
+        autoBtn.addEventListener('click', () => {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        });
+
+        resetBtn.addEventListener('click', () => {
+            stopAutoPlay();
+            nextBtn.disabled = false;
+            initialize();
+        });
+
+        maxNumInput.addEventListener('change', () => {
+            stopAutoPlay();
+            nextBtn.disabled = false;
+            initialize();
+        });
+
+        speedSlider.addEventListener('input', (e) => {
+            speed = parseInt(e.target.value);
+            speedLabel.textContent = speed + 'ms';
+            if (isAutoPlaying) {
+                stopAutoPlay();
+                startAutoPlay();
+            }
+        });
+
+        // Initialize on load
+        initialize();
+    </script>
+</body>
+</html>
+
