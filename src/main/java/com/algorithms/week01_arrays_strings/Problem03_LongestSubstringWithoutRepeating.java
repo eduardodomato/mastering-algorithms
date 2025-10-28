@@ -1,5 +1,10 @@
 package com.algorithms.week01_arrays_strings;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Problem 3: Longest Substring Without Repeating Characters
  * 
@@ -38,11 +43,30 @@ public class Problem03_LongestSubstringWithoutRepeating {
      * @return length of longest substring without repeating characters
      */
     public int lengthOfLongestSubstring(String s) {
-        // TODO: Implement your solution here
+        
         // Hint: Use sliding window technique with HashSet or HashMap
         // Time complexity: O(n)
         // Space complexity: O(min(m,n)) where m is the size of the charset
         
-        throw new UnsupportedOperationException("Method not implemented yet");
+        if(s == null || s.length() == 0) return 0;
+        
+        Map<Character,Integer> visited = new HashMap<>();
+                
+        int maxLength = 0;
+        int left = 0;
+        int right = 0;
+        while (right < s.length()) {
+           char currentChar = s.charAt(right);
+           if(visited.containsKey(currentChar) 
+                    && visited.get(currentChar) >= left) {
+            left = visited.get(currentChar) + 1;
+           }
+           visited.put(currentChar, right);
+           maxLength = Math.max(maxLength, right - left + 1);
+           right++;
+        }
+
+        return maxLength;
+
     }
 }

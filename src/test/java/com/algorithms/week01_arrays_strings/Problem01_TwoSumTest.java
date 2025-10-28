@@ -68,8 +68,8 @@ class Problem01_TwoSumTest {
     
     @Test
     void testTwoSum_LargeArray() {
-        int[] nums = new int[1000];
-        for (int i = 0; i < 1000; i++) {
+        int[] nums = new int[1001];
+        for (int i = 0; i < 1001; i++) {
             nums[i] = i;
         }
         int target = 1999; // 999 + 1000

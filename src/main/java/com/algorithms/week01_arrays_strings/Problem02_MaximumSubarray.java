@@ -39,11 +39,17 @@ public class Problem02_MaximumSubarray {
      * @return maximum sum of contiguous subarray
      */
     public int maxSubArray(int[] nums) {
-        // TODO: Implement your solution here
         // Hint: Use Kadane's algorithm (dynamic programming approach)
         // Time complexity: O(n)
         // Space complexity: O(1)
         
-        throw new UnsupportedOperationException("Method not implemented yet");
+        int maxSum = nums[0];
+        int maxTillNow = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            maxTillNow = Math.max(nums[i], maxTillNow + nums[i]);
+            maxSum = Math.max(maxSum, maxTillNow);
+        }
+        return maxSum;
     }
 }
