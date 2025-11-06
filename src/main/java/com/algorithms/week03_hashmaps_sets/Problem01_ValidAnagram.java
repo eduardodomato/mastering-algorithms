@@ -17,6 +17,14 @@ import java.util.Map;
  * - 1 <= s.length, t.length <= 5 * 10^4
  * - s and t consist of lowercase English letters.
  * 
+ * Quick Reference: Integer vs Long
+ * - Integer (int): 32-bit, max value ≈ 2.1 × 10^9 (2,147,483,647)
+ * - Long: 64-bit, max value ≈ 9.2 × 10^18
+ * - Rule of thumb: 
+ *   • If constraint ≤ 10^9 → use int
+ *   • If constraint > 10^9 → use long
+ *   • Example: 5 × 10^4 = 50,000 → comfortably fits in int
+ * 
  * Example 1:
  * Input: s = "anagram", t = "nagaram"
  * Output: true
@@ -53,9 +61,23 @@ public class Problem01_ValidAnagram {
         // Time complexity: O(n) where n is the length of the strings
         // Space complexity: O(1) since we have at most 26 characters (or O(k) for k unique chars)
         
-        // TODO: Implement your solution here
+        if(s.length() != t.length()) return false;
+        Map<Character, Integer> charCount = new HashMap<>();
+        for (Character c : s.toCharArray()) {
+            charCount.put(c, charCount.getOrDefault(c, 0) + 1);
+        }
+
+        for(Character c: t.toCharArray()){
+            if(!charCount.containsKey(c)){
+                return false;
+            }
+            charCount.put(c,charCount.get(c)-1);
+            if (charCount.get(c)<0){
+                return false;
+            }
+        }
         
-        return false; // Placeholder - replace with your implementation
+        return true;
     }
 }
 

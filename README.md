@@ -7,7 +7,8 @@ Welcome to your comprehensive Java algorithms learning journey! This curriculum 
 **October 2025:**
 - ✅ Completed Week 1: Arrays & Strings (3/3 problems solved)
 - ✅ Completed Week 2: Basic Math & Bit Manipulation (3/3 problems solved)
-- 🎯 Mastered bitwise operations, XOR properties, and Sieve of Eratosthenes algorithm
+- ✅ Completed Week 3: Hash Maps & Sets (3/3 problems solved)
+- 🎯 Mastered bitwise operations, XOR properties, Sieve of Eratosthenes algorithm, frequency counting patterns, and HashSet sequence detection
 
 ## 🎯 Learning Objectives
 
@@ -29,7 +30,7 @@ By the end of this curriculum, you will be able to:
 |------|-------|----------------|-------------------|----------------|
 | 1 | Arrays & Strings | ✅ Completed | 3/3 | Oct 2025 |
 | 2 | Basic Math & Bit Manipulation | ✅ Completed | 3/3 | Oct 2025 |
-| 3 | Hash Maps & Sets | ⏳ Not Started | 0/3 | - |
+| 3 | Hash Maps & Sets | ✅ Completed | 3/3 | Oct 2025 |
 | 4 | Linked Lists | ⏳ Not Started | 0/3 | - |
 | 5 | Stacks & Queues | ⏳ Not Started | 0/3 | - |
 | 6 | Trees & Binary Search Trees | ⏳ Not Started | 0/3 | - |
@@ -66,11 +67,16 @@ By the end of this curriculum, you will be able to:
 2. ✅ Single Number (LeetCode #136) - XOR properties
 3. ✅ Count Primes (LeetCode #204) - Sieve of Eratosthenes
 
-### **Week 3: Hash Maps & Sets**
+### **Week 3: Hash Maps & Sets** ✅
 - Hash table fundamentals
 - Frequency counting patterns
 - Set operations
 - Collision handling
+
+**Problems Solved:**
+1. ✅ Valid Anagram (LeetCode #242) - Frequency counting with HashMap
+2. ✅ Group Anagrams (LeetCode #49) - Character frequency array as HashMap key
+3. ✅ Longest Consecutive Sequence (LeetCode #128) - HashSet for O(1) lookup with sequence detection
 
 ### **Week 4: Linked Lists**
 - Singly and doubly linked lists
