@@ -50,18 +50,27 @@ public class Problem03_LongestSubstringWithoutRepeating {
         
         if(s == null || s.length() == 0) return 0;
         
+        // Stores the most recent index where each character appeared.
         Map<Character,Integer> visited = new HashMap<>();
-                
+        
+        // Tracks the best answer seen so far.
         int maxLength = 0;
+        // Left index of the current window (inclusive).
         int left = 0;
+        // Right index will expand the window (inclusive when used below).
         int right = 0;
         while (right < s.length()) {
            char currentChar = s.charAt(right);
+           // If we have seen this character inside the current window,
+           // move the left boundary just past the previous occurrence
+           // to keep the substring free of duplicates.
            if(visited.containsKey(currentChar) 
                     && visited.get(currentChar) >= left) {
             left = visited.get(currentChar) + 1;
            }
+           // Record or update the latest index for this character.
            visited.put(currentChar, right);
+           // Update the best window length after extending to right.
            maxLength = Math.max(maxLength, right - left + 1);
            right++;
         }

@@ -54,8 +54,32 @@ public class Problem03_MergeTwoSortedLists {
      * @return the head of the merged sorted list
      */
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        // TODO: Merge the lists by choosing the smaller head node at each step
-        // Hint: Use a dummy head node to simplify pointer manipulation
-        return (Objects.nonNull(list1)) ? list1 : list2;
+        if (Objects.isNull(list1)) {
+            return list2;
+        }
+        if (Objects.isNull(list2)) {
+            return list1;
+        }
+
+        ListNode dummy = new ListNode();
+        ListNode current = dummy;
+
+        ListNode pointer1 = list1;
+        ListNode pointer2 = list2;
+
+        while (Objects.nonNull(pointer1) && Objects.nonNull(pointer2)) {
+            if (pointer1.val <= pointer2.val) {
+                current.next = pointer1;
+                pointer1 = pointer1.next;
+            } else {
+                current.next = pointer2;
+                pointer2 = pointer2.next;
+            }
+            current = current.next;
+        }
+
+        current.next = Objects.nonNull(pointer1) ? pointer1 : pointer2;
+
+        return dummy.next;
     }
 }

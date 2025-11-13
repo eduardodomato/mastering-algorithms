@@ -53,8 +53,35 @@ public class Problem01_ReverseLinkedList {
      * @return the head of the reversed linked list
      */
     public ListNode reverseList(ListNode head) {
-        // TODO: Implement iterative reversal using three pointers (prev, current, next)
+        // Hint: Implement iterative reversal using three pointers (prev, current, next)
         // Hint: Track the previous node while iterating through the list
-        return head;
+
+        ListNode prev = null, curr = head;
+        ListNode next;
+        while (curr!=null){
+            next = curr.next; //store next
+            curr.next=prev; // reverse pointer
+            prev=curr; // move previous forward
+            curr=next; // move current forward
+        }
+
+        return prev;
+    }
+
+    public ListNode reverseListRecursive(ListNode head) {
+        // Base case: empty list or single node
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // Recurse on the rest of the list
+        ListNode newHead = reverseListRecursive(head.next);
+
+        // Make the next node point back to current node
+        head.next.next = head;
+        head.next = null; // current becomes tail
+
+        return newHead;
+
     }
 }

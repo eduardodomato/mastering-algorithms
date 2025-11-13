@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Floyd's Tortoise and Hare Visualization</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111c3a;
+            --accent: #38bdf8;
+            --accent-secondary: #f472b6;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(15, 23, 42, 0.92);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+        }
+
+        header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.4rem;
+            margin: 0;
+        }
+
+        header p {
+            margin: 0;
+            color: var(--muted);
+            max-width: 520px;
+            line-height: 1.6;
+        }
+
+        .visualization {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: 2.5rem;
+        }
+
+        .track {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.6), rgba(14, 116, 144, 0.2));
+            border-radius: 18px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(56, 189, 248, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            font-weight: 600;
+            font-size: 1.25rem;
+            color: var(--text);
+            transition: transform 0.8s ease;
+        }
+
+        .node.cycle {
+            border-color: rgba(250, 204, 21, 0.75);
+            box-shadow: 0 0 14px -4px rgba(250, 204, 21, 0.6);
+        }
+
+        .node.highlight-slow {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 22px -6px rgba(244, 114, 182, 0.7);
+        }
+
+        .node.highlight-fast {
+            border-color: var(--accent);
+            box-shadow: 0 0 22px -6px rgba(56, 189, 248, 0.7);
+        }
+
+        .node.highlight-overlap {
+            border-color: rgba(250, 204, 21, 0.95);
+            box-shadow: 0 0 28px -4px rgba(250, 204, 21, 0.85);
+            background: rgba(250, 204, 21, 0.12);
+        }
+
+        .node::after {
+            content: attr(data-label);
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.85rem;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+        }
+
+        .pointer {
+            position: absolute;
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.35);
+            box-shadow: 0 0 18px -4px rgba(148, 163, 184, 0.6);
+            transition: transform 0.8s ease, box-shadow 0.6s ease;
+        }
+
+        .pointer span {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: inherit;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+        }
+
+        .pointer.slow {
+            border-color: var(--accent-secondary);
+            color: var(--accent-secondary);
+            box-shadow: 0 0 24px -6px rgba(244, 114, 182, 0.6);
+        }
+
+        .pointer.fast {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 24px -6px rgba(56, 189, 248, 0.6);
+        }
+
+        .pointer.overlap {
+            box-shadow: 0 0 32px -6px rgba(250, 204, 21, 0.85);
+            background: rgba(250, 204, 21, 0.12);
+        }
+
+        .legend, .steps {
+            background: rgba(15, 23, 42, 0.85);
+            border-radius: 18px;
+            padding: 1.75rem;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+
+        .legend h2, .steps h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+        }
+
+        .legend-color.slow {
+            background: var(--accent-secondary);
+        }
+
+        .legend-color.fast {
+            background: var(--accent);
+        }
+
+        .legend-color.cycle {
+            background: linear-gradient(135deg, rgba(250, 204, 21, 0.85), rgba(250, 204, 21, 0.4));
+            border: 1px solid rgba(250, 204, 21, 0.75);
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pointer-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.85rem 1.2rem;
+            border-radius: 12px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+            color: var(--muted);
+        }
+
+        .pointer-status span strong {
+            color: var(--text);
+        }
+
+        .pointer-status span.slow strong {
+            color: var(--accent-secondary);
+        }
+
+        .pointer-status span.fast strong {
+            color: var(--accent);
+        }
+
+        .controls button {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.85), rgba(14, 165, 233, 0.7));
+            color: var(--text);
+            border: none;
+            padding: 0.85rem 1.6rem;
+            border-radius: 999px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(14, 165, 233, 0.6);
+        }
+
+        .step-indicator {
+            font-family: "JetBrains Mono", Consolas, Monaco, monospace;
+            color: var(--muted);
+            letter-spacing: 0.03em;
+        }
+
+        .step-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .step-card {
+            padding: 1.25rem;
+            border-radius: 14px;
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            background: rgba(15, 23, 42, 0.6);
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .step-card.active {
+            border-color: rgba(56, 189, 248, 0.45);
+            transform: translateX(6px);
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        .step-card h3 {
+            margin: 0 0 0.5rem;
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .step-card p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .code-snippet {
+            margin-top: 1.5rem;
+            background: rgba(15, 23, 42, 0.95);
+            border-radius: 14px;
+            padding: 1.5rem;
+            border: 1px solid rgba(148, 163, 184, 0.18);
+        }
+
+        .code-snippet pre {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(226, 232, 240, 0.88);
+        }
+
+        @media (max-width: 1024px) {
+            .visualization {
+                grid-template-columns: 1fr;
+            }
+
+            .track {
+                min-height: 520px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .container {
+                padding: 1.75rem;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <div>
+                <h1>Floyd's Tortoise &amp; Hare</h1>
+                <p>
+                    Visual walkthrough of the cycle detection algorithm using two pointers moving at different speeds.
+                    Observe how the fast pointer (hare) eventually overlaps the slow pointer (tortoise) when a cycle exists.
+                </p>
+            </div>
+            <div class="legend">
+                <h2>Legend</h2>
+                <div class="legend-item">
+                    <span class="legend-color slow"></span>
+                    <span>Slow pointer (tortoise) &mdash; moves 1 node per step</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color fast"></span>
+                    <span>Fast pointer (hare) &mdash; moves 2 nodes per step</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color cycle"></span>
+                    <span>Cycle section &mdash; pointers loop inside this region</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="visualization">
+            <div class="track">
+                <div class="controls">
+                    <button id="playPause">Play</button>
+                    <button id="reset">Reset</button>
+                    <span class="step-indicator">
+                        Step <span id="stepNumber">1</span> / <span id="totalSteps">6</span>
+                    </span>
+                </div>
+
+                <div class="pointer-status" id="pointerStatus">
+                    <span class="slow">Slow @ <strong>1</strong></span>
+                    <span class="fast">Fast @ <strong>1</strong></span>
+                </div>
+
+                <div id="nodes"></div>
+                <div id="pointers"></div>
+            </div>
+
+            <aside class="steps">
+                <h2>Algorithm Steps</h2>
+                <div class="step-details" id="stepDetails"></div>
+                <div class="code-snippet">
+                    <pre><code>while (fast != null && fast.next != null) {
+    slow = slow.next;       // move 1
+    fast = fast.next.next; // move 2
+
+    if (slow == fast) {
+        return true; // Cycle found
+    }
+}
+
+return false; // Fast reached null</code></pre>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <script>
+        const nodesContainer = document.getElementById('nodes');
+        const pointersContainer = document.getElementById('pointers');
+        const stepNumber = document.getElementById('stepNumber');
+        const totalStepsEl = document.getElementById('totalSteps');
+        const playPauseBtn = document.getElementById('playPause');
+        const resetBtn = document.getElementById('reset');
+        const stepDetailsContainer = document.getElementById('stepDetails');
+        const pointerStatus = document.getElementById('pointerStatus');
+
+        const trackLayout = [
+            { label: '1', x: 40,  y: 220 },
+            { label: '2', x: 170, y: 120 },
+            { label: '3', x: 340, y: 120 },
+            { label: '4', x: 510, y: 200 },
+            { label: '5', x: 420, y: 320 },
+            { label: '6', x: 260, y: 340 },
+            { label: '7', x: 110, y: 320 }
+        ];
+
+        const steps = [
+            {
+                title: 'Initialization',
+                description: 'Both pointers start at the head of the list. Slow moves one step; fast moves two steps.',
+                slowIndex: 0,
+                fastIndex: 0
+            },
+            {
+                title: 'Step 1',
+                description: 'Slow moves to node 2. Fast jumps to node 3. They diverge but both stay in sync with the list.',
+                slowIndex: 1,
+                fastIndex: 2
+            },
+            {
+                title: 'Step 2',
+                description: 'Slow moves to node 3. Fast leaps ahead to node 5. Fast enters the cycle before slow.',
+                slowIndex: 2,
+                fastIndex: 4
+            },
+            {
+                title: 'Step 3',
+                description: 'Slow advances into the cycle at node 4. Fast continues two steps to node 7.',
+                slowIndex: 3,
+                fastIndex: 6
+            },
+            {
+                title: 'Step 4',
+                description: 'Slow moves to node 5 while fast wraps around the cycle to node 5 as well. They are now aligned.',
+                slowIndex: 4,
+                fastIndex: 4
+            },
+            {
+                title: 'Cycle Detected',
+                description: 'Pointers meet! Meeting inside the loop confirms a cycle. In acyclic lists, fast would reach null instead.',
+                slowIndex: 4,
+                fastIndex: 4
+            }
+        ];
+
+        function createNodes() {
+            nodesContainer.innerHTML = '';
+            trackLayout.forEach((node, index) => {
+                const div = document.createElement('div');
+                div.className = 'node';
+                div.style.transform = `translate(${node.x}px, ${node.y}px)`;
+                div.textContent = node.label;
+                div.dataset.index = index;
+                div.dataset.label = node.label;
+
+                if (index >= 3) {
+                    div.classList.add('cycle');
+                }
+
+                nodesContainer.appendChild(div);
+            });
+
+        }
+
+        function createPointers() {
+            pointersContainer.innerHTML = '';
+
+            const slowPointer = document.createElement('div');
+            slowPointer.className = 'pointer slow';
+            slowPointer.id = 'slowPointer';
+            slowPointer.innerHTML = '<span>Slow</span>';
+
+            const fastPointer = document.createElement('div');
+            fastPointer.className = 'pointer fast';
+            fastPointer.id = 'fastPointer';
+            fastPointer.innerHTML = '<span>Fast</span>';
+
+            pointersContainer.appendChild(slowPointer);
+            pointersContainer.appendChild(fastPointer);
+        }
+
+        function updatePointers(stepIndex) {
+            const slowPointer = document.getElementById('slowPointer');
+            const fastPointer = document.getElementById('fastPointer');
+            const slowIdx = steps[stepIndex].slowIndex;
+            const fastIdx = steps[stepIndex].fastIndex;
+            const slowNode = trackLayout[slowIdx];
+            const fastNode = trackLayout[fastIdx];
+            const overlap = slowIdx === fastIdx;
+            const nodeSize = 72;
+            const pointerSize = 88;
+            const baseOffset = (pointerSize - nodeSize) / 2;
+
+            let slowX = slowNode.x - baseOffset;
+            let slowY = slowNode.y - baseOffset;
+            let fastX = fastNode.x - baseOffset;
+            let fastY = fastNode.y - baseOffset;
+
+            slowPointer.classList.toggle('overlap', overlap);
+            fastPointer.classList.toggle('overlap', overlap);
+
+            if (overlap) {
+                const separation = 12;
+                slowX -= separation;
+                slowY -= separation;
+                fastX += separation;
+                fastY += separation;
+            }
+
+            slowPointer.style.transform = `translate(${slowX}px, ${slowY}px)`;
+            fastPointer.style.transform = `translate(${fastX}px, ${fastY}px)`;
+
+            updatePointerStatus(slowIdx, fastIdx, overlap);
+            highlightNodes(slowIdx, fastIdx, overlap);
+        }
+
+        function updatePointerStatus(slowIdx, fastIdx, overlap) {
+            const slowLabel = trackLayout[slowIdx].label;
+            const fastLabel = trackLayout[fastIdx].label;
+            const slowInCycle = slowIdx >= 3;
+            const fastInCycle = fastIdx >= 3;
+
+            pointerStatus.innerHTML = `
+                <span class="slow">Slow @ <strong>${slowLabel}</strong>${slowInCycle ? ' (cycle)' : ''}</span>
+                <span class="fast">Fast @ <strong>${fastLabel}</strong>${fastInCycle ? ' (cycle)' : ''}${overlap ? ' — meet' : ''}</span>
+            `;
+        }
+
+        function highlightNodes(slowIdx, fastIdx, overlap) {
+            document.querySelectorAll('.node').forEach((node, index) => {
+                node.classList.remove('highlight-slow', 'highlight-fast', 'highlight-overlap');
+
+                if (overlap && index === slowIdx) {
+                    node.classList.add('highlight-overlap');
+                    return;
+                }
+
+                if (index === slowIdx) {
+                    node.classList.add('highlight-slow');
+                }
+
+                if (index === fastIdx) {
+                    node.classList.add('highlight-fast');
+                }
+            });
+        }
+
+        function populateSteps() {
+            stepDetailsContainer.innerHTML = '';
+            steps.forEach((step, index) => {
+                const card = document.createElement('div');
+                card.className = 'step-card';
+                card.dataset.index = index;
+
+                const title = document.createElement('h3');
+                title.textContent = step.title;
+
+                const description = document.createElement('p');
+                description.textContent = step.description;
+
+                card.appendChild(title);
+                card.appendChild(description);
+                card.addEventListener('click', () => {
+                    pause();
+                    goToStep(index);
+                });
+                stepDetailsContainer.appendChild(card);
+            });
+        }
+
+        function highlightStep(stepIndex) {
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.classList.toggle('active', Number(card.dataset.index) === stepIndex);
+            });
+        }
+
+        let currentStep = 0;
+        let playing = false;
+        let intervalId = null;
+
+        function goToStep(stepIndex) {
+            currentStep = stepIndex;
+            stepNumber.textContent = stepIndex + 1;
+            updatePointers(stepIndex);
+            highlightStep(stepIndex);
+        }
+
+        function play() {
+            playing = true;
+            playPauseBtn.textContent = 'Pause';
+            intervalId = setInterval(() => {
+                if (currentStep >= steps.length - 1) {
+                    pause();
+                    return;
+                }
+                goToStep(currentStep + 1);
+            }, 1800);
+        }
+
+        function pause() {
+            playing = false;
+            playPauseBtn.textContent = 'Play';
+            clearInterval(intervalId);
+        }
+
+        function reset() {
+            pause();
+            goToStep(0);
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            playing ? pause() : play();
+        });
+
+        resetBtn.addEventListener('click', reset);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            createNodes();
+            createPointers();
+            populateSteps();
+            totalStepsEl.textContent = steps.length;
+            goToStep(0);
+        });
+    </script>
+</body>
+</html>

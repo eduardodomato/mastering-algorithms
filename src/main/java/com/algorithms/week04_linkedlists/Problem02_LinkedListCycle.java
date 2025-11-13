@@ -1,5 +1,7 @@
 package com.algorithms.week04_linkedlists;
 
+
+
 /**
  * Problem 2: Linked List Cycle
  *
@@ -57,8 +59,22 @@ public class Problem02_LinkedListCycle {
      * @return true if a cycle exists, false otherwise
      */
     public boolean hasCycle(ListNode head) {
-        // TODO: Implement Floyd's Tortoise and Hare algorithm using two pointers
+        // Hint: Implement Floyd's Tortoise and Hare algorithm using two pointers
         // Hint: Fast pointer moves two steps, slow pointer moves one step per iteration
+        if (head == null) return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;             // move slow by 1
+            fast = fast.next.next;       // move fast by 2
+
+            if (slow == fast) {
+                return true;             // pointers met -> cycle
+            }
+        }
+
         return false;
     }
 }
